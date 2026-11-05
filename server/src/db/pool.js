@@ -1,9 +1,12 @@
 const { Pool } = require('pg');
 
+const isProduction = process.env.NODE_ENV === 'production';
+const isNeon = Boolean(process.env.DATABASE_URL && process.env.DATABASE_URL.includes('neon.tech'));
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ...(process.env.NODE_ENV === 'production' && {
-    ssl: { rejectUnauthorized: false },
+  ...((isProduction || isNeon) && {
+    ssl: { rejectUnauthorized: true },
   }),
 });
 

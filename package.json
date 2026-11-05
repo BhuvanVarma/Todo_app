@@ -1,0 +1,13 @@
+{
+  "name": "pern-todo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server run start"
+  },
+  "dependencies": {
+    "@neon/config": "^1.11.3",
+    "@neon/env": "^1.6.15"
+  }
+}

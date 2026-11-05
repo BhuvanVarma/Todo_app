@@ -1,4 +1,10 @@
-require('dotenv').config();
+const path = require('path');
+// 1. Load local development env from server/.env first
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+// 2. Fall back to root .env.local or .env if present
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env.local') });
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
+
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');

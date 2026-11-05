@@ -58,3 +58,4 @@ jobs:
         env:
           VITE_API_URL: http://localhost:5001
         run: npm run build
+
