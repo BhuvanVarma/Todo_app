@@ -1,0 +1,184 @@
+/* =====================
+   Reset & base
+   ===================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --danger: #dc2626;
+  --danger-hover: #b91c1c;
+  --success: #16a34a;
+  --text: #111827;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --radius: 8px;
+  --shadow: 0 1px 3px rgba(0,0,0,.1);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* =====================
+   Layout helpers
+   ===================== */
+.container { max-width: 680px; margin: 0 auto; padding: 0 1rem; }
+.card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 2rem; }
+
+/* =====================
+   Navbar
+   ===================== */
+.navbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: .75rem 0;
+  margin-bottom: 2rem;
+}
+.navbar .inner {
+  max-width: 680px; margin: 0 auto; padding: 0 1rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.navbar .brand { font-weight: 700; font-size: 1.1rem; color: var(--primary); text-decoration: none; }
+.navbar .nav-info { display: flex; align-items: center; gap: 1rem; color: var(--muted); font-size: .9rem; }
+
+/* =====================
+   Forms
+   ===================== */
+.form-group { margin-bottom: 1.25rem; }
+.form-group label { display: block; font-size: .875rem; font-weight: 500; margin-bottom: .375rem; }
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: .5rem .75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color .15s;
+  font-family: inherit;
+}
+.form-group input:focus,
+.form-group textarea:focus { border-color: var(--primary); }
+.form-group input.error,
+.form-group textarea.error { border-color: var(--danger); }
+.field-error { color: var(--danger); font-size: .8rem; margin-top: .25rem; }
+
+/* =====================
+   Buttons
+   ===================== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: .5rem 1.25rem;
+  border: none; border-radius: var(--radius);
+  font-size: .95rem; font-weight: 500; cursor: pointer;
+  transition: background .15s, opacity .15s;
+}
+.btn:disabled { opacity: .6; cursor: not-allowed; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+.btn-danger  { background: var(--danger);  color: #fff; }
+.btn-danger:hover:not(:disabled)  { background: var(--danger-hover); }
+.btn-ghost {
+  background: transparent; color: var(--muted);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover:not(:disabled) { background: var(--bg); }
+.btn-sm { padding: .3rem .75rem; font-size: .825rem; }
+.btn-full { width: 100%; }
+
+/* =====================
+   Alert
+   ===================== */
+.alert {
+  padding: .75rem 1rem;
+  border-radius: var(--radius);
+  font-size: .9rem;
+  margin-bottom: 1rem;
+}
+.alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+.alert-success { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+
+/* =====================
+   Auth pages
+   ===================== */
+.auth-page {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+}
+.auth-card { width: 100%; max-width: 420px; }
+.auth-card h1 { font-size: 1.5rem; margin-bottom: .25rem; }
+.auth-card .subtitle { color: var(--muted); font-size: .9rem; margin-bottom: 1.5rem; }
+.auth-link { text-align: center; margin-top: 1.25rem; font-size: .875rem; color: var(--muted); }
+.auth-link a { color: var(--primary); text-decoration: none; font-weight: 500; }
+.auth-link a:hover { text-decoration: underline; }
+
+/* =====================
+   Todo page
+   ===================== */
+.todos-page { padding-bottom: 3rem; }
+.todos-page h1 { font-size: 1.5rem; margin-bottom: 1.25rem; }
+
+/* Add todo form */
+.add-todo-card { margin-bottom: 1.5rem; }
+.add-todo-card h2 { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.add-todo-row { display: flex; gap: .75rem; }
+.add-todo-row .form-group { flex: 1; margin-bottom: 0; }
+.add-todo-toggle { font-size: .825rem; color: var(--primary); background: none; border: none; cursor: pointer; margin-bottom: .75rem; padding: 0; }
+.add-todo-toggle:hover { text-decoration: underline; }
+
+/* Todo list */
+.todo-list { display: flex; flex-direction: column; gap: .75rem; }
+
+.todo-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  box-shadow: var(--shadow);
+  transition: opacity .2s;
+}
+.todo-item.completed { opacity: .6; }
+.todo-item.completed .todo-title { text-decoration: line-through; color: var(--muted); }
+
+.todo-header { display: flex; align-items: flex-start; gap: .75rem; }
+.todo-checkbox {
+  width: 18px; height: 18px; cursor: pointer;
+  accent-color: var(--success); flex-shrink: 0; margin-top: .2rem;
+}
+.todo-body { flex: 1; min-width: 0; }
+.todo-title { font-weight: 500; word-break: break-word; }
+.todo-desc { font-size: .875rem; color: var(--muted); margin-top: .25rem; word-break: break-word; }
+.todo-actions { display: flex; gap: .5rem; flex-shrink: 0; }
+
+/* Edit form inline */
+.edit-form { margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+.edit-form .form-group { margin-bottom: .75rem; }
+.edit-form-actions { display: flex; gap: .5rem; }
+
+/* Empty / loading */
+.state-msg {
+  text-align: center; color: var(--muted); padding: 3rem 1rem; font-size: 1rem;
+}
+
+/* =====================
+   Spinner
+   ===================== */
+.spinner {
+  display: inline-block;
+  width: 1rem; height: 1rem;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin .6s linear infinite;
+  margin-right: .4rem;
+  vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
