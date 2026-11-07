@@ -59,3 +59,94 @@ jobs:
           VITE_API_URL: http://localhost:5001
         run: npm run build
 
+  e2e:
+    needs: [server, client]
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: pern_todo_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgrespassword
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: |
+            server/package-lock.json
+            client/package-lock.json
+            qa-automation/package-lock.json
+
+      - name: Install server dependencies
+        working-directory: server
+        run: npm ci
+
+      - name: Install client dependencies
+        working-directory: client
+        run: npm ci
+
+      - name: Install QA automation dependencies
+        working-directory: qa-automation
+        run: npm ci
+
+      - name: Install Playwright Chromium with dependencies
+        working-directory: qa-automation
+        run: npx playwright install --with-deps chromium
+
+      - name: Apply PostgreSQL database schema
+        run: |
+          PGPASSWORD=postgrespassword psql -h localhost -U postgres -d pern_todo_test -f server/schema.sql
+
+      - name: Start backend server
+        working-directory: server
+        env:
+          PORT: 5001
+          NODE_ENV: test
+          DATABASE_URL: postgres://postgres:postgrespassword@localhost:5432/pern_todo_test
+          JWT_SECRET: ${{ secrets.JWT_SECRET || 'test_jwt_secret_ci_only_32_characters_minimum' }}
+          CLIENT_ORIGIN: http://localhost:5173
+        run: npm start &
+
+      - name: Wait for backend server health
+        run: |
+          curl --head --silent --fail --retry 15 --retry-delay 2 --retry-connrefused http://localhost:5001/health
+
+      - name: Start frontend client
+        working-directory: client
+        env:
+          VITE_API_URL: http://localhost:5001
+        run: npm run dev -- --port 5173 &
+
+      - name: Wait for frontend client
+        run: |
+          curl --head --silent --fail --retry 15 --retry-delay 2 --retry-connrefused http://localhost:5173
+
+      - name: Run Playwright test suite
+        working-directory: qa-automation
+        env:
+          UI_BASE_URL: http://localhost:5173
+          API_BASE_URL: http://localhost:5001
+          CI: true
+        run: npm test
+
+      - name: Upload Playwright Test Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: qa-automation/playwright-report/
+          retention-days: 14
