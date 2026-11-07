@@ -17,7 +17,7 @@ async function createTodo(req, res, next) {
     const { title, description } = req.body;
     const { rows } = await pool.query(
       'INSERT INTO todos (user_id, title, description) VALUES ($1, $2, $3) RETURNING id, title, description, is_completed, created_at',
-      [req.userId, title.trim(), description ? description.trim() : null]
+      [req.userId, title.trim(), null]
     );
     res.status(201).json({ todo: rows[0] });
   } catch (err) {
